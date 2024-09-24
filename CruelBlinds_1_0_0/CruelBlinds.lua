@@ -4,7 +4,7 @@
 --- PREFIX: cruel
 --- MOD_AUTHOR: [mathguy]
 --- MOD_DESCRIPTION: Cruel Blinds
---- VERSION: 1.4.0
+--- VERSION: 1.4.1
 ----------------------------------------------
 ------------MOD CODE -------------------------
 
@@ -108,7 +108,7 @@ SMODS.Blind	{
     key = 'steal',
     name = 'The Steal',
     config = {},
-    boss = {min = 3, max = 10, hardcore = true}, 
+    boss = {min = 1, max = 10, hardcore = true}, 
     boss_colour = HEX("2222BB"),
     atlas = "blinds",
     pos = { x = 0, y = 2},
@@ -1248,6 +1248,11 @@ SMODS.Sticker {
     pos = { x = 0, y = 0 },
     colour = HEX '97F1EF',
     badge_colour = HEX '97F1EF',
+    should_apply = function(self, card, center, area)
+        if G.GAME.modifiers and G.GAME.modifiers.enable_st_cruel_wash and (card.ability.set == "Joker") and pseudorandom(pseudoseed('wash')) < 0.5 then
+            return true
+        end
+    end,
     loc_txt = {
         name = "Wash",
         text = {
@@ -1260,7 +1265,7 @@ SMODS.Sticker {
     loc_vars = function(self, info_queue, card)
         return {vars = {8, card.ability.wash_tally or 8}}
     end,
-    set_sticker = function(self, card, val)
+    apply = function(self, card, val)
         card.ability[self.key] = val
         card.ability.wash_tally = card.ability.wash_tally or 8
     end,
@@ -1403,6 +1408,11 @@ SMODS.Sticker {
     pos = { x = 1, y = 0 },
     colour = HEX 'FDA200',
     badge_colour = HEX 'FDA200',
+    should_apply = function(self, card, center, area)
+        if G.GAME.modifiers and G.GAME.modifiers.enable_st_cruel_overpriced and self.sets[card.ability.set] and pseudorandom(pseudoseed('overprice')) < 0.35 then
+            return true
+        end
+    end,
     loc_txt = {
         name = "Overpriced",
         text = {
@@ -1417,8 +1427,10 @@ SMODS.Sticker {
         Planet = true,
         Spectral = true,
         Tarot_Planet = true,
+        Voucher = true,
+        Booster = true,
     },
-    set_sticker = function(self, card, val)
+    apply = function(self, card, val)
         card.ability[self.key] = val
         card:set_cost()
     end
