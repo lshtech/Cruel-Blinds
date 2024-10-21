@@ -1180,7 +1180,6 @@ SMODS.Blind	{
     end
 }
 
-
 ------------Cruel Stakes------------------------
 
 SMODS.Stake {
@@ -1530,7 +1529,7 @@ G.FUNCS.can_reroll = function(e)
     end
   end
 
-old_press = Blind.press_play
+local old_press = Blind.press_play
 function Blind:press_play()
     local returns = old_press(self)
     if G.GAME.modifiers.rise then
